@@ -158,6 +158,6 @@ class Registry:
                ' cluster' in details["zato_env"]["details"]:
                 logger.info("%s is already defined. ", channel["name"])
             else:
-                raise ValueError(response.details)
+                logger.error(response.details)
         else:
             logger.info("%s added to the connections.", channel["name"])
