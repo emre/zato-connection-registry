@@ -7,9 +7,24 @@ logger = logging.getLogger(__name__)
 
 
 class Registry:
+    """
+    A Registry class to fetch and push incoming/outgoing connection
+    definitions from any Zato instance, to any Zato instance.
+    """
 
     def __init__(self, zato_addr, username, password,
                  path="/zato/json/{}", cluster_id=None):
+        """
+        Note: The default path argument works for Zato 3.0. You may need to
+        change if you use older Zato versions.
+
+        Args:
+            :param zato_addr (str): The address of Zato instance
+            :param username (str): Username for the Zato client
+            :param password (str): Password for the Zato client
+            :param path (str): URL path for the API calls.
+            :param cluster_id (int): The cluster id to pull/push connections
+        """
         self.zato_addr = zato_addr
         self.username = username
         self.password = password
@@ -24,6 +39,9 @@ class Registry:
         self.rest_channels = []
 
     def load_rest_channels(self):
+        """Loads all REST connection definitions from the remote Zato server
+        and injects it to self.rest_channels property.
+        """
         response = self.client.invoke(
             "zato.http-soap.get-list",
             {"cluster_id": self.cluster_id}
@@ -39,12 +57,26 @@ class Registry:
             self.rest_channels.append(outgoing_connection)
 
     def dump_to_json(self, json_file):
+        """Dumps the loaded channels into a specified JSON file.
+
+        Note: if there are no channels loaded, it fetches up to date channels
+        from the remote Zato Server.
+
+        :param json_file (str): The JSON file path to dump the channels
+        """
         if not len(self.rest_channels):
             self.load_rest_channels()
         with open(json_file, 'w+') as f:
             json.dump(self.rest_channels, f, indent=4, sort_keys=True)
 
     def channel_to_request_params(self, channel, cluster_id=1):
+        """Makes raw channel data compatible for the Zato's
+        zato.http-soap.create endpoint.
+
+        :param channel (dict): raw channel data
+        :param cluster_id (int): The cluster id to pull/push connections
+        :return: (dict)
+        """
         request = {
             "cluster_id": cluster_id,
             "is_active": channel.get("is_active"),
@@ -85,6 +117,13 @@ class Registry:
 
     def restore_rest_channels(self, from_file=None,
                               from_list=None, from_registry_instance=None):
+        """Restores the saved connection list into the remote Zato server.
+
+        :param from_file (str): A JSON file path includes connections
+        :param from_list: (list): A python list of channels
+        :param from_registry_instance: (Registry) A registry instance to get
+        the old connection definitions.
+        """
         channel_list = []
         if from_file:
             with open(from_file, 'r') as f:
@@ -98,6 +137,10 @@ class Registry:
             self.restore_channel(channel)
 
     def restore_channel(self, channel):
+        """Creates a single channel on the remote Zato server.
+
+        :param channel (dict): Channel data
+        """
         response = self.client.invoke(
             "zato.http-soap.create",
             self.channel_to_request_params(channel, self.cluster_id)
