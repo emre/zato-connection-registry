@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='zato-connection-registry',
-    version='0.0.3',
+    version='0.0.4',
     packages=[
         'zato_connection_registry',
     ],

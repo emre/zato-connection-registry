@@ -4,7 +4,7 @@ import logging
 from zato.client import APIClient
 
 logger = logging.getLogger(__name__)
-
+logging.basicConfig()
 
 class Registry:
     """
