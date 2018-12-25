@@ -47,6 +47,9 @@ class Registry:
             {"cluster_id": self.cluster_id}
         )
 
+        if not response.data:
+            raise ValueError(response.details)
+
         response_key = "zato_http_soap_get_list_response"
         for outgoing_connection in response.data[response_key]:
 
@@ -154,5 +157,7 @@ class Registry:
             if 'An object of that name `{}` already exists on this' \
                ' cluster' in details["zato_env"]["details"]:
                 logger.info("%s is already defined. ", channel["name"])
+            else:
+                raise ValueError(response.details)
         else:
             logger.info("%s added to the connections.", channel["name"])
