@@ -13,23 +13,55 @@ Note: Since ```zato-client``` package is a requirement for this tool, and python
 
 # Installation
 
-TBA
+```
+$ pip install zato-connection-registry
+```
 
 # Commands
 
-TBA
+- Backup connection definitions 
 
+```
+$ zato_connection_registry http://172.31.52.2:11223 pubapi:123 /tmp/foo.json
+```
+
+- Restore connection definitions
+
+```
+$  zato_connection_registry restore http://172.31.52.2:11223 pubapi:123 /tmp/foo.json
+```
 
 # Using zato-connection-registry as a library
 
-TBA
+After the installation, you can use the package as you wish:
+
+```
+from zato_connection_registry.registry import Registry
+
+r = Registry(
+    "http://localhost:11223",
+    "pubapi",
+    "123",
+)
+
+r.load_rest_channels()
+
+print(r.rest_channels)
+```
 
 # Limitations
 
-TBA
+- Only REST channel definitions (including incoming and outcoing) are supported. 
 
 # Running tests
 
-TBA
+```
+python tests.py
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.049s
+
+OK
+```
 
 
