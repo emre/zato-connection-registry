@@ -1,4 +1,4 @@
-zato-connection-registry is a command line application/library o load, backup, restore REST connection definitions in Zato servers.
+[zato-connection-registry](https://github.com/emre/zato-connection-registry) is a command line application/library to load, backup, restore REST connection definitions in Zato servers.
 
 If you maintain lots of REST API service definitions and experiment Zato at the same time (spinning up new Zato instances for development, load balancing Zato's internal load balancer, etc.) then it may be a pain to migrate these services.
 
