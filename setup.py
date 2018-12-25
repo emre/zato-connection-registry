@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='zato-connection-registry',
-    version='0.0.1',
+    version='0.0.2',
     packages=[
         'zato_connection_registry',
     ],
@@ -16,5 +16,5 @@ setup(
             'zato_connection_registry = zato_connection_registry.cli:main',
         ],
     },
-    install_requires=["zato-client==3.0.2", "responses"]
+    install_requires=["zato-client==3.0.2", "click", "responses"]
 )
