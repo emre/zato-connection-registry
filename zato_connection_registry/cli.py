@@ -36,3 +36,7 @@ def restore(address, credentials, from_file):
     )
     restore_registry.restore_rest_channels(from_file=from_file)
     print("Restore completed. See %s" % from_file)
+
+
+def main():
+    cli()
